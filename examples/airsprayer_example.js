@@ -22,10 +22,10 @@ function Cylinder(radius,height,direction) {
   } else {
     this.direction = direction
   }
-  this.shape = CSG.cylinder({
+  this.shape = CSG.cylinder({                      //using the CSG primitives
     start: [0, 0, 0],
     end: this.direction,
-    radius: radius,
+    radius: radius,                        // true cylinder
     resolution: 16
   });
 }
@@ -50,4 +50,23 @@ function Difference(objects){
       finalShape = difference(finalShape, this.objects[i].shape)
     }
     this.shape = finalShape
+}
+
+
+function main() {
+  /*
+  let cylinderObj = new Cylinder(2,3)
+  let cubeObj = new Cube(1,3,2)
+  let cubeObj2 = new Cube(3,1,2)
+  let union = new Difference([cylinderObj, cubeObj, cubeObj2])
+  return union.shape
+  */
+  let ring = new Cylinder(1,1);
+  let ring2 = new Cylinder(2,4);
+  ring2.shape = ring2.shape.translate([0, 0, -ring2.height+ring.height])
+  let cap = new Difference([ring2,ring]);
+  let hole2 = new Cylinder(1.5,3);
+  hole2.shape = hole2.shape.translate([0, 0, -ring2.height+ring.height])
+  let capWithHole = new Difference([cap,hole2]);
+  return capWithHole.shape
 }
